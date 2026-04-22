@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veille Prix Parfums</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #F7F4EF;
+  --ink: #1A1712;
+  --gold: #B8955A;
+  --gold-light: #E8D5B0;
+  --gold-pale: #F5EDD9;
+  --muted: #7A7368;
+  --border: rgba(26,23,18,0.1);
+  --border-strong: rgba(26,23,18,0.22);
+  --success: #2D6A4F;
+  --success-bg: #D8F3DC;
+  --warning-bg: #FFF3E0;
+  --warning: #8A4500;
+  --danger: #7B1D1D;
+  --danger-bg: #FDECEA;
+  --info-bg: #EBF3FC;
+  --info: #1A3A5C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
+
+header{background:var(--ink);height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(184,149,90,0.2)}
+.logo{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:300;color:var(--gold-light);letter-spacing:2.5px;text-transform:uppercase}
+.logo em{color:var(--gold);font-style:italic}
+.hright{display:flex;align-items:center;gap:14px}
+.dot{width:7px;height:7px;border-radius:50%;background:#5BE584;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hlabel{font-size:10px;color:rgba(247,244,239,.45);letter-spacing:1.5px;text-transform:uppercase}
+.hdate{font-family:'DM Mono',monospace;font-size:10px;color:rgba(247,244,239,.3)}
+
+main{max-width:1080px;margin:0 auto;padding:2.5rem 2rem 5rem}
+
+/* ADD PANEL */
+.add-panel{background:var(--ink);border-radius:14px;padding:2rem 2.5rem;margin-bottom:2.5rem;position:relative;overflow:hidden}
+.add-panel::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;border:1px solid rgba(184,149,90,.15)}
+.add-panel::after{content:'';position:absolute;top:-110px;right:-110px;width:360px;height:360px;border-radius:50%;border:1px solid rgba(184,149,90,.07)}
+.add-panel-title{font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:300;color:var(--gold-light);margin-bottom:3px}
+.add-panel-sub{font-size:13px;color:rgba(247,244,239,.45);margin-bottom:1.5rem}
+.add-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.fg{display:flex;flex-direction:column;gap:5px;flex:1;min-width:170px}
+.fg label{font-size:10px;color:rgba(247,244,239,.4);text-transform:uppercase;letter-spacing:1.2px}
+.fg input{background:rgba(247,244,239,.06);border:1px solid rgba(184,149,90,.25);border-radius:7px;padding:10px 14px;color:var(--cream);font-family:'DM Mono',monospace;font-size:14px;outline:none;transition:border-color .2s;height:42px}
+.fg input::placeholder{color:rgba(247,244,239,.18)}
+.fg input:focus{border-color:var(--gold)}
+.btn-go{background:var(--gold);border:none;border-radius:7px;padding:0 26px;height:42px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap;transition:opacity .2s,transform .1s;flex-shrink:0}
+.btn-go:hover{opacity:.85}
+.btn-go:active{transform:scale(.98)}
+.btn-go:disabled{opacity:.35;cursor:not-allowed}
+.add-hint{font-size:11px;color:rgba(247,244,239,.28);margin-top:10px}
+.add-hint strong{color:rgba(247,244,239,.5);font-weight:400}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:2rem}
+.sc{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.sc-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:7px}
+.sc-val{font-family:'Cormorant Garamond',serif;font-size:27px;font-weight:400;line-height:1;color:var(--ink)}
+.sc-sub{font-size:11px;color:var(--muted);margin-top:3px}
+
+/* LIST HEADER */
+.list-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.list-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;letter-spacing:.8px}
+.btn-csv{background:transparent;border:1px solid var(--border-strong);border-radius:6px;padding:6px 14px;font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.btn-csv:hover{background:#fff;color:var(--ink)}
+
+/* PRODUCT CARD */
+.pcard{background:#fff;border:1px solid var(--border);border-radius:12px;margin-bottom:14px;overflow:hidden;transition:box-shadow .2s}
+.pcard:hover{box-shadow:0 3px 18px rgba(26,23,18,.06)}
+.pcard-hd{display:flex;align-items:center;gap:10px;padding:13px 18px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.ean-pill{font-family:'DM Mono',monospace;font-size:10px;background:var(--gold-pale);color:var(--gold);padding:3px 10px;border-radius:20px;border:1px solid var(--gold-light);white-space:nowrap}
+.pname{font-weight:500;font-size:15px;flex:1;min-width:160px}
+.pmeta{font-size:11px;color:var(--muted)}
+.pactions{display:flex;gap:6px;margin-left:auto}
+.btn-sm{background:transparent;border:1px solid var(--border);border-radius:6px;padding:5px 11px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--muted);transition:all .12s;white-space:nowrap}
+.btn-sm:hover{border-color:var(--border-strong);color:var(--ink)}
+.btn-del:hover{background:var(--danger-bg);color:var(--danger);border-color:transparent}
+
+/* LOADING */
+.pcard-loading{padding:22px 18px;display:flex;align-items:center;gap:12px;color:var(--muted);font-size:13px}
+.spinner{width:17px;height:17px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .75s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ERROR */
+.pcard-err{margin:14px 18px;padding:12px 14px;background:var(--danger-bg);color:var(--danger);font-size:13px;border-radius:8px}
+
+/* PRICE GRID */
+.pcard-body{padding:14px 18px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:8px;margin-bottom:13px}
+.ptile{border:1px solid var(--border);border-radius:8px;padding:10px 12px;transition:border-color .12s}
+.ptile:hover{border-color:var(--border-strong)}
+.ptile.best{border:2px solid var(--success);background:var(--success-bg)}
+.ptile.official{background:var(--gold-pale);border-color:var(--gold-light)}
+.pt-top{display:flex;justify-content:space-between;align-items:flex-start;gap:4px;margin-bottom:3px}
+.pt-site{font-size:12px;font-weight:500;color:var(--ink)}
+.pt-ctry{font-size:10px;color:var(--muted)}
+.pt-price{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;color:var(--ink);line-height:1.1}
+.pt-cur{font-size:10px;color:var(--muted);margin-bottom:2px}
+.pt-diff{font-size:10px;margin-top:3px}
+.pt-diff.up{color:var(--warning)}
+.pt-diff.dn{color:var(--success)}
+.badge{font-size:9px;padding:2px 7px;border-radius:20px;font-weight:500;white-space:nowrap}
+.b-best{background:rgba(45,106,79,.15);color:var(--success)}
+.b-off{background:var(--gold-pale);color:var(--gold);border:1px solid var(--gold-light)}
+.pt-link{font-size:10px;color:#1A5CA8;text-decoration:none;display:block;margin-top:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pt-link:hover{text-decoration:underline}
+
+/* SUMMARY */
+.psum{display:flex;gap:18px;padding-top:10px;border-top:1px solid var(--border);flex-wrap:wrap}
+.ps-item{font-size:12px;color:var(--muted)}
+.ps-val{font-weight:500;color:var(--ink)}
+.pnote{font-size:11px;color:var(--muted);margin-top:9px;padding-top:9px;border-top:1px solid var(--border);font-style:italic;line-height:1.6}
+
+/* EMPTY */
+.empty{text-align:center;padding:4rem 2rem}
+.empty-glyph{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:var(--gold-light);margin-bottom:1rem}
+.empty-txt{font-size:15px;color:var(--muted);margin-bottom:6px}
+.empty-sub{font-size:13px;color:rgba(122,115,104,.6)}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--ink);color:var(--cream);padding:11px 18px;border-radius:8px;font-size:13px;z-index:999;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;max-width:300px}
+.toast.on{opacity:1;transform:translateY(0)}
+
+footer{text-align:center;padding:1.5rem;font-size:11px;color:var(--muted);border-top:1px solid var(--border);margin-top:1rem}
+
+@media(max-width:600px){
+  main{padding:1.5rem 1rem 4rem}
+  .add-panel{padding:1.5rem}
+  .pgrid{grid-template-columns:1fr 1fr}
+  header{padding:0 1rem}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Parfum <em>Veille</em> Prix</div>
+  <div class="hright">
+    <div class="dot"></div>
+    <span class="hlabel">En direct</span>
+    <span class="hdate" id="hdate"></span>
+  </div>
+</header>
+
+<main>
+
+  <div class="add-panel">
+    <div class="add-panel-title">Rechercher un produit par code EAN</div>
+    <div class="add-panel-sub">Entrez un code EAN (8–13 chiffres) pour obtenir tous les prix publics mondiaux en temps réel</div>
+    <div class="add-row">
+      <div class="fg">
+        <label>Code EAN *</label>
+        <input id="inp-ean" type="text" placeholder="Ex : 3305400183146" maxlength="14">
+      </div>
+      <div class="fg">
+        <label>Nom du produit (optionnel)</label>
+        <input id="inp-name" type="text" placeholder="Ex : Molinard Osmanthus 75ml">
+      </div>
+      <button class="btn-go" id="btn-go" onclick="addProduct()">Rechercher les prix</button>
+    </div>
+    <div class="add-hint">Exemples : <strong>3305400183146</strong> (Molinard Osmanthus) · <strong>3348901419093</strong> (Dior Sauvage EdP) · <strong>3145891253400</strong> (Chanel N°5)</div>
+  </div>
+
+  <div class="stats" id="stats" style="display:none">
+    <div class="sc"><div class="sc-lbl">Produits suivis</div><div class="sc-val" id="s1">0</div><div class="sc-sub">codes EAN</div></div>
+    <div class="sc"><div class="sc-lbl">Meilleur prix trouvé</div><div class="sc-val" id="s2">—</div><div class="sc-sub">toutes plateformes</div></div>
+    <div class="sc"><div class="sc-lbl">Plateformes</div><div class="sc-val" id="s3">—</div><div class="sc-sub">sites vérifiés</div></div>
+    <div class="sc"><div class="sc-lbl">Mise à jour</div><div class="sc-val" id="s4" style="font-size:16px;margin-top:5px">—</div><div class="sc-sub">heure locale</div></div>
+  </div>
+
+  <div class="list-hd" id="list-hd" style="display:none">
+    <div class="list-title">Catalogue suivi</div>
+    <button class="btn-csv" onclick="exportCSV()">Exporter CSV</button>
+  </div>
+
+  <div id="plist"></div>
+
+  <div class="empty" id="empty">
+    <div class="empty-glyph">◌</div>
+    <div class="empty-txt">Aucun produit suivi pour l'instant</div>
+    <div class="empty-sub">Entrez un code EAN ci-dessus pour démarrer la veille prix</div>
+  </div>
+
+</main>
+
+<footer>Parfum Veille Prix — Outil de veille e-commerce · Données issues de recherches web publiques</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+let products = JSON.parse(localStorage.getItem('pvp2') || '[]');
+
+function save(){ localStorage.setItem('pvp2', JSON.stringify(products)); }
+
+function toast(msg, dur=2800){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'), dur);
+}
+
+function sym(cur){ return cur==='GBP'?'£':cur==='USD'?'$':'€'; }
+
+function updateStats(){
+  const n = products.length;
+  document.getElementById('stats').style.display = n ? 'grid' : 'none';
+  document.getElementById('list-hd').style.display = n ? 'flex' : 'none';
+  document.getElementById('empty').style.display = n ? 'none' : 'block';
+  document.getElementById('s1').textContent = n;
+  let plats = new Set(), mins = [];
+  products.forEach(p=>{ (p.prices||[]).forEach(pr=>{ plats.add(pr.site); if(pr.priceEur) mins.push(pr.priceEur); }); });
+  document.getElementById('s3').textContent = plats.size || '—';
+  document.getElementById('s2').textContent = mins.length ? Math.min(...mins).toFixed(2)+' €' : '—';
+  document.getElementById('s4').textContent = new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+}
+
+function renderCard(p){
+  let el = document.getElementById('c-'+p.id);
+  if(!el){
+    el = document.createElement('div');
+    el.className='pcard'; el.id='c-'+p.id;
+    document.getElementById('plist').prepend(el);
+  }
+
+  if(p.loading){
+    el.innerHTML=`<div class="pcard-hd"><span class="ean-pill">${p.ean}</span><span class="pname">${p.name||'Identification en cours…'}</span></div><div class="pcard-loading"><div class="spinner"></div>Recherche des prix sur toutes les plateformes mondiales…</div>`;
+    return;
+  }
+  if(p.error){
+    el.innerHTML=`<div class="pcard-hd"><span class="ean-pill">${p.ean}</span><span class="pname">${p.name||'Erreur'}</span><div class="pactions"><button class="btn-sm" onclick="refresh('${p.id}')">Réessayer</button><button class="btn-sm btn-del" onclick="del('${p.id}')">Supprimer</button></div></div><div class="pcard-err">${p.error}</div>`;
+    return;
+  }
+
+  const prices = p.prices||[];
+  const sorted = [...prices].sort((a,b)=>(a.priceEur||999)-(b.priceEur||999));
+  const ref = prices.find(x=>x.isOfficial) || sorted[0];
+
+  const tiles = sorted.map((pr,i)=>{
+    const isBest = i===0 && !pr.isOfficial;
+    const isOff = pr.isOfficial;
+    const cls = isOff?'ptile official':isBest?'ptile best':'ptile';
+    const badge = isOff?'<span class="badge b-off">officiel</span>':isBest?'<span class="badge b-best">meilleur prix</span>':'';
+    let diffHtml='';
+    if(pr.price && ref?.price && !pr.isOfficial){
+      const pct=((pr.price-ref.price)/ref.price*100);
+      const sign=pct>0?'+':'';
+      diffHtml=`<div class="pt-diff ${pct>0?'up':'dn'}">${sign}${pct.toFixed(1)}% vs référence</div>`;
+    }
+    const lnk = pr.url?`<a class="pt-link" href="${pr.url}" target="_blank">Voir l'offre →</a>`:'';
+    return `<div class="${cls}"><div class="pt-top"><span class="pt-site">${pr.site}</span>${badge}</div><div class="pt-ctry">${pr.country||''}</div><div class="pt-price">${sym(pr.currency)}${pr.price?.toFixed(2)||'—'}</div><div class="pt-cur">${pr.currency||'EUR'}</div>${diffHtml}${lnk}</div>`;
+  }).join('');
+
+  const minP = sorted[0], maxP = sorted[sorted.length-1];
+  const ecart = minP&&maxP&&minP!==maxP ? ((maxP.priceEur-minP.priceEur)/minP.priceEur*100).toFixed(1) : null;
+
+  el.innerHTML=`
+    <div class="pcard-hd">
+      <span class="ean-pill">${p.ean}</span>
+      <span class="pname">${p.name||p.ean}</span>
+      <span class="pmeta">${p.volume?p.volume+'ml · ':''}${p.type||''}</span>
+      <div class="pactions">
+        <button class="btn-sm" onclick="refresh('${p.id}')">Actualiser</button>
+        <button class="btn-sm btn-del" onclick="del('${p.id}')">Supprimer</button>
+      </div>
+    </div>
+    <div class="pcard-body">
+      <div class="pgrid">${tiles||'<p style="color:var(--muted);font-size:13px">Aucun prix trouvé pour cet EAN.</p>'}</div>
+      <div class="psum">
+        ${minP?`<div class="ps-item">Meilleur prix : <span class="ps-val">${sym(minP.currency)}${minP.price?.toFixed(2)}</span></div>`:''}
+        ${ecart?`<div class="ps-item">Écart max : <span class="ps-val">+${ecart}%</span></div>`:''}
+        <div class="ps-item">Plateformes : <span class="ps-val">${prices.length}</span></div>
+        <div class="ps-item">Mis à jour : <span class="ps-val">${new Date(p.updatedAt).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</span></div>
+      </div>
+      ${p.notes?`<div class="pnote">${p.notes}</div>`:''}
+    </div>`;
+}
+
+async function fetchPrices(ean, name){
+  const r = await fetch('/api/search', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ean, name})
+  });
+  const data = await r.json();
+  if(!r.ok) throw new Error(data.error||'Erreur serveur');
+  if(!data.found) throw new Error('Produit non trouvé pour cet EAN. Vérifiez le code barres.');
+  return data;
+}
+
+async function addProduct(){
+  const ean = document.getElementById('inp-ean').value.trim().replace(/\D/g,'');
+  const name = document.getElementById('inp-name').value.trim();
+  if(ean.length<8){ toast('Entrez un code EAN valide (min. 8 chiffres)'); return; }
+  if(products.find(p=>p.ean===ean)){ toast('Ce code EAN est déjà dans votre tableau de bord'); return; }
+
+  const btn=document.getElementById('btn-go');
+  btn.disabled=true; btn.textContent='Recherche…';
+  document.getElementById('inp-ean').value='';
+  document.getElementById('inp-name').value='';
+
+  const id = Date.now().toString();
+  const np = {id, ean, name:name||null, loading:true, updatedAt:new Date().toISOString()};
+  products.unshift(np);
+  document.getElementById('empty').style.display='none';
+  document.getElementById('list-hd').style.display='flex';
+  renderCard(np); updateStats();
+
+  try{
+    const res = await fetchPrices(ean, name);
+    const idx = products.findIndex(p=>p.id===id);
+    products[idx]={id,ean,name:res.product_name||name||ean,brand:res.brand,volume:res.volume_ml,type:res.type,prices:res.prices,notes:res.notes,loading:false,updatedAt:new Date().toISOString()};
+    save(); renderCard(products[idx]); updateStats();
+    toast('✓ Prix trouvés : '+(res.product_name||ean));
+  }catch(err){
+    const idx=products.findIndex(p=>p.id===id);
+    products[idx]={...products[idx],loading:false,error:err.message};
+    renderCard(products[idx]);
+    toast('Erreur : '+err.message, 4000);
+  }
+  btn.disabled=false; btn.textContent='Rechercher les prix';
+}
+
+async function refresh(id){
+  const idx=products.findIndex(p=>p.id===id); if(idx<0)return;
+  const p=products[idx];
+  products[idx]={...p,loading:true,error:null}; renderCard(products[idx]);
+  try{
+    const res=await fetchPrices(p.ean,p.name);
+    products[idx]={...p,name:res.product_name||p.name,brand:res.brand,volume:res.volume_ml,type:res.type,prices:res.prices,notes:res.notes,loading:false,updatedAt:new Date().toISOString()};
+    save(); renderCard(products[idx]); updateStats();
+    toast('Prix mis à jour');
+  }catch(err){
+    products[idx]={...p,loading:false,error:err.message}; renderCard(products[idx]);
+    toast('Erreur : '+err.message,3500);
+  }
+}
+
+function del(id){
+  if(!confirm('Supprimer ce produit ?'))return;
+  products=products.filter(p=>p.id!==id); save();
+  const el=document.getElementById('c-'+id); if(el)el.remove();
+  updateStats(); toast('Produit supprimé');
+}
+
+function exportCSV(){
+  const rows=[['EAN','Produit','Marque','Volume ml','Type','Plateforme','Pays','Devise','Prix','Officiel','URL']];
+  products.forEach(p=>{
+    (p.prices||[]).forEach(pr=>{
+      rows.push([p.ean,p.name||'',p.brand||'',p.volume||'',p.type||'',pr.site,pr.country||'',pr.currency,pr.price||'',pr.isOfficial?'Oui':'Non',pr.url||'']);
+    });
+  });
+  const csv=rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download='veille-prix-parfums-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+}
+
+document.getElementById('inp-ean').addEventListener('keydown',e=>{if(e.key==='Enter')addProduct();});
+document.getElementById('hdate').textContent=new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+
+(function init(){
+  if(products.length){
+    document.getElementById('empty').style.display='none';
+    document.getElementById('list-hd').style.display='flex';
+    products.forEach(p=>renderCard(p));
+    updateStats();
+  }
+})();
+</script>
+</body>
+</html>

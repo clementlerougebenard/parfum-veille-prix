@@ -1,0 +1,7 @@
+{
+  "name": "parfum-veille-prix",
+  "version": "1.0.0",
+  "description": "Veille prix parfums par code EAN",
+  "private": true,
+  "engines": { "node": ">=18" }
+}
