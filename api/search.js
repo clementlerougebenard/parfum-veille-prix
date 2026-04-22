@@ -12,10 +12,14 @@ module.exports = async function handler(req, res) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return res.status(500).json({ error: 'Clé API non configurée' });
 
-  const prompt = `Recherche le prix du parfum EAN "${ean}"${name ? ` (${name})` : ''} sur Sephora, Notino, Marionnaud, Nocibé, Amazon, le site officiel de la marque.
-Réponds UNIQUEMENT en JSON sans markdown:
-{"product_name":"nom complet","brand":"marque","volume_ml":75,"type":"Eau de Parfum","found":true,"prices":[{"site":"nom","country":"FR","currency":"EUR","price":69.90,"isOfficial":false,"url":"https://..."}],"notes":"remarques"}
-Si introuvable: found:false, prices:[].`;
+  const prompt = `Tu es un expert en veille prix parfums. Recherche sur internet le prix du parfum avec le code EAN "${ean}"${name ? ` (${name})` : ''}.
+
+Cherche sur : site officiel de la marque, Sephora, Notino, Marionnaud, Nocibé, Beauty Success, Fragrance.com, Douglas, Flaconi, Amazon FR/DE/UK/US, et tout autre site trouvé.
+
+Réponds UNIQUEMENT en JSON valide sans markdown :
+{"product_name":"nom complet","brand":"marque","volume_ml":75,"type":"Eau de Parfum","found":true,"prices":[{"site":"nom du site","country":"FR","currency":"EUR","price":69.90,"isOfficial":false,"url":"https://...","in_stock":true}],"notes":"remarques"}
+
+Si introuvable : found:false, prices:[].`;
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -27,7 +31,7 @@ Si introuvable: found:false, prices:[].`;
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-5',
-        max_tokens: 800,
+        max_tokens: 1000,
         tools: [{ type: 'web_search_20250305', name: 'web_search' }],
         messages: [{ role: 'user', content: prompt }]
       })
